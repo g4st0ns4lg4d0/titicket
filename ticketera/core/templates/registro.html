@@ -1,11 +1,16 @@
 {% extends 'base.html' %}
+{% load crispy_forms_tags %}
 {% block contenido %}
 
-<h2>Regístrate para comprar tus tickets</h2>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button class="btn btn-primary">Registrarse</button>
-</form>
+<h1 class="fw-bold text-center mb-4 gradiente">Regístrate para comprar tus tickets</h1>
+<div class="d-flex justify-content-center">
+    <div class="shadow border rounded-4 px-4 py-5 max-w-50 bg-white" style="max-width: 700;">
+        <form method="post">
+            {% csrf_token %}
+            {{ form|crispy }}
+            <button class="btn btn-primary">Registrarse</button>
+        </form>
+    </div>
+</div>
 
 {% endblock %}
