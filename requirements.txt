@@ -1,0 +1,10 @@
+anyio==4.12.1
+asgiref==3.11.1
+crispy-bootstrap5==2026.3
+Django==6.0.3
+django-browser-reload==1.21.0
+django-crispy-forms==2.6
+django-watchfiles==1.4.0
+idna==3.11
+sqlparse==0.5.5
+watchfiles==1.1.1
