@@ -8,6 +8,7 @@ urlpatterns = [
     path('registro_cliente/', views.registro_cliente, name='registro_cliente'),
     path('agregar_carrito/<int:ticket_id>', views.agregar_carrito, name='agregar_carrito'),
     path('eliminar_item/<int:ticket_id>', views.eliminar_item, name='eliminar_item'),
+    path('contacto_prod/', views.contacto_prod, name='contacto_prod'),
     # ADMIN
     path('lista_productoras/', views.lista_productoras, name='lista_productoras'),
     path('crear_productora/', views.crear_productora, name='crear_productora'),

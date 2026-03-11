@@ -1,8 +1,11 @@
+import re
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required, user_passes_test
 from .models import Productora, Evento, Ubicacion, Ticket
-from .forms import ProductoraForm, EventoForm, UbicacionForm, TicketForm, ClienteRegistroForm
+from .forms import ProductoraForm, EventoForm, UbicacionForm, TicketForm, ClienteRegistroForm, ContactProdForm
 from django.contrib.auth.models import Group
+from django.core.mail import send_mail
+
 
 def es_admin(user):
     return user.groups.filter(name='administrador').exists()
@@ -35,6 +38,28 @@ def editar_productora(request, id):
         form.save()
         return redirect('lista_productoras')
     return render(request, 'admin/productoras/form.html', {'form': form})
+
+def contacto_prod(request):
+    if request.method == "POST":
+        form = ContactProdForm(request.POST)
+        if form.is_valid():
+            nombre = form.cleaned_data["nombre"]
+            email = form.cleaned_data["email"]
+            asunto = form.cleaned_data["asunto"]
+            mensaje = form.cleaned_data["mensaje"]
+            print(f"Nombre: {nombre}")
+            print(f"Email: {email}")
+            print(f"Asunto: {asunto}")
+            print(f"Mensaje: {mensaje}")
+            return render(request, "contacto_prod_ok.html", {"nombre": nombre})
+        else:
+            form = ContactProdForm()
+            return render(request, "contacto_prod.html", {"form": form})
+        
+    else:
+        form = ContactProdForm()
+        return render(request, "contacto_prod.html", {"form": form})
+    
 
 #=========================
 # UBICACIONES
