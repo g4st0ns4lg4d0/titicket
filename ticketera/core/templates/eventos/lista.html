@@ -1,8 +1,19 @@
 {% extends 'base.html' %}
 {% block contenido %}
-
-<h2 class="mb-4">Eventos Disponibles</h2>
-
+<div class="row mb-4 mt-3 align-items-center">
+    <div class="col-md-6">
+        <h2>Eventos Disponibles</h2>
+    </div>
+    <div class="col-md-6 text-right">
+        <form method="get">
+            <div class="input-group">
+                <input type="text" name="q" class="form-control" placeholder="Buscar Evento" aria-label="Buscar Evento"
+                    aria-describedby="button-addon2">
+                <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Buscar</button>
+            </div>
+    </div>
+</div>
+</div>
 <div class="row">
     {% for evento in eventos %}
     <div class="col-md-4 mb-4">

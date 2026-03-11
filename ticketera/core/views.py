@@ -114,7 +114,14 @@ def editar_tickets_evento(request, evento_id):
     })
 
 def lista_eventos(request):
+    # Obtener todos los eventos activos
     eventos = Evento.objects.filter(activo=True)
+
+    # Obtener eventos con cuadro de búsqueda 
+    query = request.GET.get('q')
+    if query:
+        eventos = eventos.filter(nombre__icontains=query)
+        
     return render(request, 'eventos/lista.html', {'eventos': eventos})
 
 def detalle_evento(request, evento_id):
