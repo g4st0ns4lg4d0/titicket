@@ -51,10 +51,17 @@ def contacto_prod(request):
             print(f"Email: {email}")
             print(f"Asunto: {asunto}")
             print(f"Mensaje: {mensaje}")
+            
+            """
+            send_mail(
+                asunto,
+                f"De: {nombre} <{email}>\n\n{mensaje}",
+                email,  # remitente
+                ["destinatario@ejemplo.com"],  # no importa, Mailtrap lo captura igual
+            )"""
+
+
             return render(request, "contacto_prod_ok.html", {"nombre": nombre})
-        else:
-            form = ContactProdForm()
-            return render(request, "contacto_prod.html", {"form": form})
         
     else:
         form = ContactProdForm()
