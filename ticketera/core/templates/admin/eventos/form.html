@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block contenido %}
+
+<h2>Crear evento</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button class="btn btn-success">Guardar evento</button>
+</form>
+
+{% endblock %}

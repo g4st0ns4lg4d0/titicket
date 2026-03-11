@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block contenido %}
+
+<h2>Formulario ubicaciones</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    {% if texto_confirmacion %}
+        <p>{{ texto_confirmacion }}</p>
+        <button class="btn btn-danger">Eliminar</button>
+    {% else %}
+        <button class="btn btn-success">Guardar</button>
+    {% endif %}
+</form>
+{% endblock %}

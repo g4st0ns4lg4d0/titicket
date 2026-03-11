@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block contenido %}
+
+<h2>Carrito de compras</h2>
+<table class="table table-stripped">
+    <thead>
+        <tr>
+            <th>Evento</th>
+            <th>Ubicación</th>
+            <th>Cantidad</th>
+            <th>Precio</th>
+            <th>Subtotal</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for id, item in carrito.items %}
+            <tr>
+                <td>{{ item.evento }}</td>
+                <td>{{ item.ubicacion }}</td>
+                <td>{{ item.cantidad }} UNI</td>
+                <td>${{ item.precio }}</td>
+                <td>${% widthratio item.precio 1 item.cantidad %}</td>
+                <td>
+                    <a href="{% url 'eliminar_item' id %}" class="btn btn-danger btn-sm">Eliminar</a>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<h4>Total: ${{ total }}</h4>
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block contenido %}
+
+<h2>Ubicaciones</h2>
+
+<a href="{% url 'crear_ubicacion' %}" class="btn btn-primary">Nueva ubicación</a>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Ubicación</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for ubicacion in ubicaciones %}
+            <tr>
+                <td>{{ ubicacion.nombre }}</td>
+                <td>{{ ubicacion.descripcion }}</td>
+                <td>
+                    <a href="{% url 'editar_ubicacion' ubicacion.id %}" class="btn btn-warning">Editar</a>
+                    <a href="{% url 'eliminar_ubicacion' ubicacion.id %}" class="btn btn-danger">Eliminar</a>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

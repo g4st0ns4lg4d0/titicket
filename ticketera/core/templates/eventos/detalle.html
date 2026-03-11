@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block contenido %}
+
+<h2>{{ evento.nombre }}</h2>
+<ul>
+    <li>{{ evento.descripcion }}</li>
+    <li>Fecha: {{ evento.fecha_evento }}</li>
+    <li>Lugar: {{ evento.lugar }}</li>
+    <li>Comuna: {{ evento.comuna }}</li>
+    <li>Productora: {{ evento.productora.nombre }}</li>
+</ul>
+<hr>
+
+<!--tickets-->
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Ubicación</th>
+            <th>Stock</th>
+            <th>Precio</th>
+            <th>Agregar</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for ticket in tickets %}
+            <tr>
+                <td>{{ ticket.ubicacion.nombre }}</td>
+                <td>{{ ticket.stock }} UNI</td>
+                <td>${{ ticket.precio }}</td>
+                <td>
+                    <form method="post" action="{% url 'agregar_carrito' ticket.id %}">
+                        {% csrf_token %}
+                        <input type="number" name="cantidad" value="1" min="1">
+                        <button class="btn btn-success btn-sm" type="submit">Agregar</button>
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}
