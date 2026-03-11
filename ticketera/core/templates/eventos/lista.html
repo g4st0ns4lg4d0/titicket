@@ -1,18 +1,22 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block contenido %}
 
-<h2 class="mb-4">Eventos Disponibles</h2>
+<h1 class="mb-4 text-center fw-bold gradiente">Eventos Disponibles</h1>
 
 <div class="row">
     {% for evento in eventos %}
     <div class="col-md-4 mb-4">
         <div class="card shadow">
+            <img src="{% static 'img/concierto.jpg'%}" class="card-img-top" alt="...">
             <div class="card-body">
                 <h5>{{ evento.nombre }}</h5>
-                <p>{{ evento.fecha_evento }}</p>
-                <a href="{% url 'detalle_evento' evento.id %}" class="btn btn-primary">
-                    Ver Tickets
-                </a>
+                <p><i class="bi bi-calendar-date-fill fs-5 text-primary"></i> {{ evento.fecha_evento }}</p>
+                <div class="d-flex justify-content-end">
+                    <a href="{% url 'detalle_evento' evento.id %}" class="btn btn-primary">
+                        Ver Tickets
+                    </a>
+                </div>
             </div>
         </div>
     </div>

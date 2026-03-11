@@ -1,0 +1,25 @@
+@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css");
+
+body{
+  background-color: #eee;
+}
+
+.gradiente {
+  background: linear-gradient(to right, #4d0218, #e60076);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+* {
+    font-family: "Roboto", sans-serif;
+}
+
+h1 {
+  font-family: "Carter One", system-ui;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.text-brand{
+  color: #fea5d5;
+}
