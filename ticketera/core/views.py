@@ -1,21 +1,34 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required, user_passes_test
 from .models import Productora, Evento, Ubicacion, Ticket
-from .forms import ProductoraForm, EventoForm, UbicacionForm, TicketForm, ClienteRegistroForm
+from .forms import (
+    ProductoraForm,
+    EventoForm,
+    UbicacionForm,
+    TicketForm,
+    ClienteRegistroForm,
+)
 from django.contrib.auth.models import Group
+from django.core.mail import send_mail
+from django.http import HttpResponse
+from django.conf import settings
+
 
 def es_admin(user):
-    return user.groups.filter(name='administrador').exists()
+    return user.groups.filter(name="administrador").exists()
 
-#=========================
+
+# =========================
 # PRODUCTORA
-#=========================
+# =========================
+
 
 @login_required
 @user_passes_test(es_admin)
 def lista_productoras(request):
     productoras = Productora.objects.all()
-    return render(request, 'admin/productoras/lista.html', {'productoras': productoras})
+    return render(request, "admin/productoras/lista.html", {"productoras": productoras})
+
 
 @login_required
 @user_passes_test(es_admin)
@@ -23,8 +36,9 @@ def crear_productora(request):
     form = ProductoraForm(request.POST or None)
     if form.is_valid():
         form.save()
-        return redirect('lista_productoras')
-    return render(request, 'admin/productoras/form.html', {'form': form})
+        return redirect("lista_productoras")
+    return render(request, "admin/productoras/form.html", {"form": form})
+
 
 @login_required
 @user_passes_test(es_admin)
@@ -33,18 +47,21 @@ def editar_productora(request, id):
     form = ProductoraForm(request.POST or None, instance=productora)
     if form.is_valid():
         form.save()
-        return redirect('lista_productoras')
-    return render(request, 'admin/productoras/form.html', {'form': form})
+        return redirect("lista_productoras")
+    return render(request, "admin/productoras/form.html", {"form": form})
 
-#=========================
+
+# =========================
 # UBICACIONES
-#=========================
+# =========================
+
 
 @login_required
 @user_passes_test(es_admin)
 def lista_ubicaciones(request):
     ubicaciones = Ubicacion.objects.all()
-    return render(request, 'admin/ubicaciones/lista.html', {'ubicaciones': ubicaciones})
+    return render(request, "admin/ubicaciones/lista.html", {"ubicaciones": ubicaciones})
+
 
 @login_required
 @user_passes_test(es_admin)
@@ -52,8 +69,9 @@ def crear_ubicacion(request):
     form = UbicacionForm(request.POST or None)
     if form.is_valid():
         form.save()
-        return redirect('lista_ubicaciones')
-    return render(request, 'admin/ubicaciones/form.html', {'form': form})
+        return redirect("lista_ubicaciones")
+    return render(request, "admin/ubicaciones/form.html", {"form": form})
+
 
 @login_required
 @user_passes_test(es_admin)
@@ -63,8 +81,9 @@ def editar_ubicacion(request, id):
 
     if form.is_valid():
         form.save()
-        return redirect('lista_ubicaciones')
-    return render(request, 'admin/ubicaciones/form.html', {'form': form})
+        return redirect("lista_ubicaciones")
+    return render(request, "admin/ubicaciones/form.html", {"form": form})
+
 
 @login_required
 @user_passes_test(es_admin)
@@ -74,15 +93,18 @@ def eliminar_ubicacion(request, id):
 
     if request.method == "POST":
         ubicacion.delete()
-        return redirect('lista_ubicaciones')
-    return render(request, 'admin/ubicaciones/form.html', {
-        'ubicacion': ubicacion,
-        'texto_confirmacion': texto_confirmacion
-        })
+        return redirect("lista_ubicaciones")
+    return render(
+        request,
+        "admin/ubicaciones/form.html",
+        {"ubicacion": ubicacion, "texto_confirmacion": texto_confirmacion},
+    )
 
-#=========================
+
+# =========================
 # EVENTO
-#=========================
+# =========================
+
 
 @login_required
 @user_passes_test(es_admin)
@@ -91,8 +113,9 @@ def crear_evento(request):
 
     if form.is_valid():
         evento = form.save()
-        return redirect('editar_tickets_evento', evento.id)
-    return render(request, 'admin/eventos/form.html', {'form':form})
+        return redirect("editar_tickets_evento", evento.id)
+    return render(request, "admin/eventos/form.html", {"form": form})
+
 
 @login_required
 @user_passes_test(es_admin)
@@ -104,74 +127,95 @@ def editar_tickets_evento(request, evento_id):
         ticket = form.save(commit=False)
         ticket.evento = evento
         ticket.save()
-        return redirect('editar_tickets_evento', evento.id)
-    
+        return redirect("editar_tickets_evento", evento.id)
+
     tickets = Ticket.objects.filter(evento=evento)
-    return render(request, 'admin/eventos/tickets.html', {
-        'evento': evento,
-        'form': form,
-        'tickets': tickets
-    })
+    return render(
+        request,
+        "admin/eventos/tickets.html",
+        {"evento": evento, "form": form, "tickets": tickets},
+    )
+
 
 def lista_eventos(request):
     eventos = Evento.objects.filter(activo=True)
-    return render(request, 'eventos/lista.html', {'eventos': eventos})
+    return render(request, "eventos/lista.html", {"eventos": eventos})
+
 
 def detalle_evento(request, evento_id):
     evento = get_object_or_404(Evento, id=evento_id, activo=True)
     tickets = Ticket.objects.filter(evento=evento)
-    return render(request, 'eventos/detalle.html', {
-        'evento': evento,
-        'tickets': tickets
-    })
+    return render(
+        request, "eventos/detalle.html", {"evento": evento, "tickets": tickets}
+    )
 
-#=========================
+
+# =========================
 # CLIENTES
-#=========================
+# =========================
+
 
 def registro_cliente(request):
     form = ClienteRegistroForm(request.POST or None)
     if form.is_valid():
         user = form.save()
-        grupo = Group.objects.get(name='cliente')
+        grupo = Group.objects.get(name="cliente")
         user.groups.add(grupo)
-        return redirect('login')
-    return render(request, 'registro.html', {'form':form})
+        return redirect("login")
+    return render(request, "registro.html", {"form": form})
 
-#=========================
+
+# =========================
 # CARRITO DE COMPRAS
-#=========================
+# =========================
+
 
 def agregar_carrito(request, ticket_id):
     ticket = get_object_or_404(Ticket, id=ticket_id)
-    cantidad = int(request.POST.get('cantidad', 1))
+    cantidad = int(request.POST.get("cantidad", 1))
 
-    carrito = request.session.get('carrito', {})
+    carrito = request.session.get("carrito", {})
 
     if str(ticket_id) in carrito:
-        carrito[str(ticket_id)]['cantidad'] += cantidad
+        carrito[str(ticket_id)]["cantidad"] += cantidad
     else:
         carrito[str(ticket_id)] = {
-            'evento': ticket.evento.nombre,
-            'ubicacion': ticket.ubicacion.nombre,
-            'precio': int(ticket.precio),
-            'cantidad': cantidad
+            "evento": ticket.evento.nombre,
+            "ubicacion": ticket.ubicacion.nombre,
+            "precio": int(ticket.precio),
+            "cantidad": cantidad,
         }
-    request.session['carrito'] = carrito
-    return redirect('ver_carrito')
+    request.session["carrito"] = carrito
+    enviar_correo(request)  # Simula el envío de correo al agregar al carrito
+    return redirect("ver_carrito")
+
 
 def ver_carrito(request):
-    carrito = request.session.get('carrito', {})
-    total = sum(item['precio'] * item['cantidad'] for item in carrito.values())
+    carrito = request.session.get("carrito", {})
+    total = sum(item["precio"] * item["cantidad"] for item in carrito.values())
 
-    return render(request, 'carrito.html', {
-        'carrito': carrito,
-        'total': total
-    })
+    return render(request, "carrito.html", {"carrito": carrito, "total": total})
+
 
 def eliminar_item(request, ticket_id):
-    carrito = request.session.get('carrito', {})
+    carrito = request.session.get("carrito", {})
     if str(ticket_id) in carrito:
         del carrito[str(ticket_id)]
-        request.session['carrito'] = carrito
-    return redirect('ver_carrito')
+        request.session["carrito"] = carrito
+    return redirect("ver_carrito")
+
+
+# ===========================
+# ENVIO DE CORREO (SIMULADO)
+# ===========================
+
+
+def enviar_correo(request):
+    send_mail(
+        "Asunto del correo",
+        "Este es el contenido del mensaje",
+        settings.EMAIL_HOST_USER,
+        ["titicketbootcamp@gmail.com"],
+        fail_silently=False,
+    )
+    return HttpResponse("Correo enviado")
